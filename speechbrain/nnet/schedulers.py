@@ -113,7 +113,7 @@ class NewBobScheduler:
                 improvement = 0
             else:
                 improvement = (prev_metric - metric_value) / prev_metric
-            if improvement < self.improvement_threshold:
+            if (improvement > 0) and (improvement < self.improvement_threshold):
                 if self.current_patient == 0:
                     new_value *= self.annealing_factor
                     self.current_patient = self.patient
