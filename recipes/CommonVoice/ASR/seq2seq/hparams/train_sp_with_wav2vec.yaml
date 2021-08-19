@@ -5,7 +5,7 @@
 # ################################
 
 # Seed needs to be set at top of yaml, before objects with parameters are made
-seed: 1234
+seed: 1236
 __set_seed: !!python/object/apply:torch.manual_seed [!ref <seed>]
 output_folder: !ref results/wav2vec2_ctcatt_sp/<seed>
 wer_file: !ref <output_folder>/wer.txt
@@ -16,12 +16,12 @@ train_log: !ref <output_folder>/train_log.txt
 wav2vec2_hub: facebook/wav2vec2-large-xlsr-53-spanish
 
 # Data files
-data_folder: /home/jls/speechbrain/recipes/CommonVoice/es  # e.g, /localscratch/cv-corpus-5.1-2020-06-22/fr
+data_folder: /home/jls/repos/speechbrain/recipes/CommonVoice/es  # e.g, /localscratch/cv-corpus-5.1-2020-06-22/fr
 train_tsv_file: !ref <data_folder>/train.tsv  # Standard CommonVoice .tsv files
 dev_tsv_file: !ref <data_folder>/dev.tsv  # Standard CommonVoice .tsv files
 test_tsv_file: !ref <data_folder>/test.tsv  # Standard CommonVoice .tsv files
 accented_letters: True
-language: sp # use 'it' for Italian, 'rw' for Kinyarwanda, 'en' for english
+language: es # use 'it' for Italian, 'rw' for Kinyarwanda, 'en' for english
 train_csv: !ref <save_folder>/train.csv
 valid_csv: !ref <save_folder>/dev.csv
 test_csv: !ref <save_folder>/test.csv
@@ -32,12 +32,15 @@ skip_prep: False # Skip data preparation
 avoid_if_longer_than: 10.0
 
 # Training parameters
-number_of_epochs: 30
+number_of_epochs: 20
+ctc_weight: 0.3
 number_of_ctc_epochs: 15
+gradient_accumulation: 2 
+gradient_clipping: 5.0
+loss_reduction: 'batchmean'
 lr: 1.0
 lr_wav2vec: 0.0001
-ctc_weight: 0.3
-sorting: ascending
+sorting: descending
 auto_mix_prec: False
 sample_rate: 16000
 ckpt_interval_minutes: 30 # save checkpoint every N min
@@ -46,15 +49,15 @@ ckpt_interval_minutes: 30 # save checkpoint every N min
 # With data_parallel batch_size is split into N jobs
 # With DDP batch_size is multiplied by N jobs
 # Must be 6 per GPU to fit 16GB of VRAM
-batch_size: 12
-test_batch_size: 4
+batch_size: 20 
+test_batch_size: 5
 
 dataloader_options:
     batch_size: !ref <batch_size>
-    num_workers: 6
+    num_workers: 20
 test_dataloader_options:
     batch_size: !ref <test_batch_size>
-    num_workers: 6
+    num_workers: 10
 
 # BPE parameters
 token_type: unigram  # ["unigram", "bpe", "char"]
