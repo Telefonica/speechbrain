@@ -1,4 +1,5 @@
 """
+gger = logging.getLogger(__name__)
 Data preparation.
 
 Download: https://voice.mozilla.org/en/datasets
@@ -16,8 +17,9 @@ import torchaudio
 import unicodedata
 from tqdm.contrib import tzip
 
-logger = logging.getLogger(__name__)
 
+logger = logging.getLogger()
+logger = logging.getLogger(__name__)
 
 def prepare_common_voice(
     data_folder,
@@ -234,12 +236,12 @@ def create_csv(
         file_name = mp3_path.split(".")[-2].split("/")[-1]
         spk_id = line.split("\t")[0]
         snt_id = file_name
-
+        
         # Reading the signal (to retrieve duration in seconds)
         if os.path.isfile(mp3_path):
             info = torchaudio.info(mp3_path)
         else:
-            msg = "\tError loading: %s" % (str(len(file_name)))
+            msg = "\tError loading: %s" % (str((mp3_path)))
             logger.info(msg)
             continue
 
@@ -253,7 +255,7 @@ def create_csv(
         # Important: feel free to specify the text normalization
         # corresponding to your alphabet.
 
-        if language in ["en", "fr", "it", "rw"]:
+        if language in ["en", "fr", "it", "rw","es"]:
             words = re.sub("[^'A-Za-z0-9À-ÖØ-öø-ÿЀ-ӿ]+", " ", words).upper()
         elif language == "ar":
             HAMZA = "\u0621"
