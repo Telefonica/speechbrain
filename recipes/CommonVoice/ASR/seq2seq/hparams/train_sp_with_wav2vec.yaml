@@ -16,7 +16,7 @@ train_log: !ref <output_folder>/train_log.txt
 wav2vec2_hub: facebook/wav2vec2-large-xlsr-53-spanish
 
 # Data files
-data_folder: /home/jls/speechbrain/recipes/CommonVoice/es  # e.g, /localscratch/cv-corpus-5.1-2020-06-22/fr
+data_folder: /home/jls/repos/speechbrain/recipes/CommonVoice/es  # e.g, /localscratch/cv-corpus-5.1-2020-06-22/fr
 train_tsv_file: !ref <data_folder>/train.tsv  # Standard CommonVoice .tsv files
 dev_tsv_file: !ref <data_folder>/dev.tsv  # Standard CommonVoice .tsv files
 test_tsv_file: !ref <data_folder>/test.tsv  # Standard CommonVoice .tsv files
@@ -66,7 +66,7 @@ dnn_layers: 2
 dnn_neurons: 1024
 emb_size: 128
 dec_neurons: 1024
-freeze_wav2vec: False
+freeze_wav2vec: True
 
 # Outputs
 output_neurons: 500  # BPE size, index(blank/eos/bos) = 0
