@@ -54,10 +54,10 @@ test_batch_size: 5
 
 dataloader_options:
     batch_size: !ref <batch_size>
-    num_workers: 20
+    num_workers: 8
 test_dataloader_options:
     batch_size: !ref <test_batch_size>
-    num_workers: 10
+    num_workers: 8
 
 # BPE parameters
 token_type: unigram  # ["unigram", "bpe", "char"]
@@ -66,9 +66,9 @@ character_coverage: 1.0
 # Model parameters
 activation: !name:torch.nn.LeakyReLU
 dnn_layers: 2
-dnn_neurons: 1024
+dnn_neurons: 512
 emb_size: 128
-dec_neurons: 1024
+dec_neurons: 512
 freeze_wav2vec: True
 
 # Outputs
@@ -132,8 +132,8 @@ dec: !new:speechbrain.nnet.RNN.AttentionalRNNDecoder
     input_size: !ref <emb_size>
     rnn_type: gru
     attn_type: location
-    hidden_size: 1024
-    attn_dim: 1024
+    hidden_size: 512
+    attn_dim: 128
     num_layers: 1
     scaling: 1.0
     channels: 10
