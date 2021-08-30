@@ -18,7 +18,7 @@ To run this recipe, do the following:
 
 With the default hyperparameters, the system employs a pretrained wav2vec2 encoder.
 The wav2vec2 model is pretrained following the XSLR Spanish HuggingFace model:
-facebook/wav2vec2-large-xlsr-53-spanish
+from https://huggingface.co/facebook/wav2vec2-large-xlsr-53-spanish
 
 The decoder is based on a standard GRU and BeamSearch (no LM).
 
@@ -33,6 +33,7 @@ other possible variations.
 
 Authors
  * Titouan Parcollet 2020
+ * Jordi Luque 2021, Adaptation to Spanish
 """
 
 logger = logging.getLogger(__name__)
@@ -339,12 +340,14 @@ if __name__ == "__main__":
 
     # Load hyperparameters file with command-line overrides
     hparams_file, run_opts, overrides = sb.parse_arguments(sys.argv[1:])
-    with open(hparams_file) as fin:
-        hparams = load_hyperpyyaml(fin, overrides)
-
+    
     # If distributed_launch=True then
     # create ddp_group with the right communication protocol
     sb.utils.distributed.ddp_init_group(run_opts)
+    
+    with open(hparams_file) as fin:
+        hparams = load_hyperpyyaml(fin, overrides)
+
 
     # Dataset preparation (parsing CommonVoice)
     from common_voice_prepare import prepare_common_voice  # noqa
@@ -357,7 +360,7 @@ if __name__ == "__main__":
     )
 
     # Due to DDP, we do the preparation ONLY on the main python process
-    run_on_main(
+    sb.utils.distributed.run_on_main(
         prepare_common_voice,
         kwargs={
             "data_folder": hparams["data_folder"],
