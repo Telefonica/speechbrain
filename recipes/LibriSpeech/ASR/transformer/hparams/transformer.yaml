@@ -24,7 +24,7 @@ train_log: !ref <output_folder>/train_log.txt
 pretrained_lm_tokenizer_path: speechbrain/asr-transformer-transformerlm-librispeech
 
 # Data files
-data_folder: !PLACEHOLDER # e.g., /path/to/LibriSpeech
+data_folder: /home/data/audio/LibriSpeech/ # e.g., /path/to/LibriSpeech
 # If RIRS_NOISES dir exists in /localscratch/xxx_corpus/RIRS_NOISES
 # then data_folder_rirs should be /localscratch/xxx_corpus
 # otherwise the dataset will automatically be downloaded
@@ -40,14 +40,16 @@ test_csv:
     - !ref <data_folder>/test-other.csv
 
 # Training parameters
+data_parallel_backend: True 
+data_parallel_count: -1
 # To make Transformers converge, the global bath size should be large enough.
 # The global batch size is computed as batch_size * n_gpus * gradient_accumulation.
 # Empirically, we found that this value should be >= 128.
 # Please, set your parameters accordingly.
-number_of_epochs: 110
-batch_size: 16 # This works for 2x GPUs with 32GB
+number_of_epochs: 100
+batch_size: 4 # This works for 2x GPUs with 32GB
 ctc_weight: 0.3
-gradient_accumulation: 4
+gradient_accumulation: 12 
 gradient_clipping: 5.0
 loss_reduction: 'batchmean'
 sorting: random
@@ -98,7 +100,7 @@ min_decode_ratio: 0.0
 max_decode_ratio: 1.0
 valid_search_interval: 10
 valid_beam_size: 10
-test_beam_size: 66
+test_beam_size: 46
 lm_weight: 0.60
 ctc_weight_decode: 0.40
 

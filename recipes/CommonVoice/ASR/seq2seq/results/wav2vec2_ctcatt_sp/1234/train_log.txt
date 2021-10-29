@@ -1,0 +1,11 @@
+epoch: 1, lr_model: 1.00e+00, lr_wav2vec: 1.00e-04 - train loss: 2.01 - valid loss: 1.30, valid CER: 9.78, valid WER: 14.59
+epoch: 2, lr_model: 1.00e+00, lr_wav2vec: 1.00e-04 - train loss: 1.39 - valid loss: 1.23, valid CER: 10.11, valid WER: 12.84
+epoch: 3, lr_model: 1.00e+00, lr_wav2vec: 1.00e-04 - train loss: 1.28 - valid loss: 1.22, valid CER: 11.39, valid WER: 12.60
+epoch: 4, lr_model: 1.00e+00, lr_wav2vec: 1.00e-04 - train loss: 1.24 - valid loss: 1.26, valid CER: 9.61, valid WER: 14.01
+epoch: 5, lr_model: 1.00e+00, lr_wav2vec: 1.00e-04 - train loss: 1.17 - valid loss: 1.27, valid CER: 10.25, valid WER: 14.66
+epoch: 6, lr_model: 1.00e+00, lr_wav2vec: 1.00e-04 - train loss: 1.15 - valid loss: 1.27, valid CER: 11.92, valid WER: 23.18
+epoch: 7, lr_model: 1.00e+00, lr_wav2vec: 1.00e-04 - train loss: 1.13 - valid loss: 1.25, valid CER: 10.20, valid WER: 13.86
+epoch: 8, lr_model: 1.00e+00, lr_wav2vec: 1.00e-04 - train loss: 1.11 - valid loss: 1.25, valid CER: 9.73, valid WER: 16.54
+epoch: 9, lr_model: 1.00e+00, lr_wav2vec: 1.00e-04 - train loss: 1.09 - valid loss: 1.24, valid CER: 9.92, valid WER: 16.90
+epoch: 10, lr_model: 1.00e+00, lr_wav2vec: 1.00e-04 - train loss: 1.08 - valid loss: 1.23, valid CER: 9.25, valid WER: 12.97
+Epoch loaded: 3 - test loss: 1.25, test CER: 16.22, test WER: 14.06
