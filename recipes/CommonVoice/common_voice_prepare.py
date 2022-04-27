@@ -1,6 +1,8 @@
 """
 Data preparation.
+
 Download: https://voice.mozilla.org/en/datasets
+
 Author
 ------
 Titouan Parcollet
@@ -30,6 +32,7 @@ def prepare_common_voice(
     """
     Prepares the csv files for the Mozilla Common Voice dataset.
     Download: https://voice.mozilla.org/en/datasets
+
     Arguments
     ---------
     data_folder : str
@@ -50,6 +53,7 @@ def prepare_common_voice(
         Specify the language for text normalization.
     skip_prep: bool
         If True, skip data preparation.
+
     Example
     -------
     >>> from recipes.CommonVoice.common_voice_prepare import prepare_common_voice
@@ -149,7 +153,9 @@ def prepare_common_voice(
 def skip(save_csv_train, save_csv_dev, save_csv_test):
     """
     Detects if the Common Voice data preparation has been already done.
+
     If the preparation has been done, we can skip it.
+
     Returns
     -------
     bool
@@ -175,6 +181,7 @@ def create_csv(
 ):
     """
     Creates the csv file given a list of wav files.
+
     Arguments
     ---------
     orig_tsv_file : str
@@ -184,6 +191,7 @@ def create_csv(
     accented_letters : bool, optional
         Defines if accented letters will be kept as individual letters or
         transformed to the closest non-accented letters.
+
     Returns
     -------
     None
@@ -248,7 +256,7 @@ def create_csv(
         # Important: feel free to specify the text normalization
         # corresponding to your alphabet.
 
-        if language in ["en", "fr", "it", "rw", "sp"]:
+        if language in ["en", "fr", "it", "rw"]:
             words = re.sub(
                 "[^’'A-Za-z0-9À-ÖØ-öø-ÿЀ-ӿéæœâçèàûî]+", " ", words
             ).upper()
@@ -263,13 +271,12 @@ def create_csv(
             ALEF_MADDA = "\u0622"
             ALEF_HAMZA_ABOVE = "\u0623"
             letters = (
-                "ابتةثجحخدذرزسشصضطظعغفقكلمنهويءآأؤإئ"
+                "ابتةثجحخدذرزسشصضطظعغفقكلمنهويىءآأؤإئ"
                 + HAMZA
                 + ALEF_MADDA
                 + ALEF_HAMZA_ABOVE
             )
-            words = re.sub("[^" + letters + "]+", " ", words).upper()
-        
+            words = re.sub("[^" + letters + " ]+", "", words).upper()
         elif language == "ga-IE":
             # Irish lower() is complicated, but upper() is nondeterministic, so use lowercase
             def pfxuc(a):
@@ -285,7 +292,7 @@ def create_csv(
             words = words.replace("'", " ")
             words = words.replace("’", " ")
 
-            #catalan = "ÏÀÒ"
+            # catalan = "ÏÀÒ"
             words = words.replace("Ï", "I")
             words = words.replace("À", "A")
             words = words.replace("Ò", "O")
@@ -297,7 +304,7 @@ def create_csv(
        
             if(re.search("[" + cyrillic_chars  + proper_nouns + "]", words)):
                 continue
-
+        
         # Remove accents if specified
         if not accented_letters:
             words = strip_accents(words)
@@ -345,10 +352,13 @@ def create_csv(
 def check_commonvoice_folders(data_folder):
     """
     Check if the data folder actually contains the Common Voice dataset.
+
     If not, raises an error.
+
     Returns
     -------
     None
+
     Raises
     ------
     FileNotFoundError
