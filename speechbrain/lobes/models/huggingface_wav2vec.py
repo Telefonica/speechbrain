@@ -187,6 +187,9 @@ class HuggingFaceWav2Vec2(nn.Module):
             if "wav2vec2." in key:
                 save_key = key.replace("model.wav2vec2.", "")
                 modified_state_dict[save_key] = params
+            if "model." in key:
+                save_key = key.replace("model.", "")
+                modified_state_dict[save_key] = params
 
         incompatible_keys = self.model.load_state_dict(
             modified_state_dict, strict=False
