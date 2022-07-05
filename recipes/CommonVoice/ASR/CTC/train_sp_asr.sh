@@ -1,0 +1,1 @@
+python -u train_with_wav2vec.py  hparams/train_sp_with_wav2vec2.yaml --data_parallel_backend
