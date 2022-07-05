@@ -1,0 +1,1 @@
+python -u train_albayzin.py  hparams/train_albayzin.yaml --data_parallel_backend
