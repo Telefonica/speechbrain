@@ -25,14 +25,14 @@ logger = logging.getLogger(__name__)
 
 
 def prepare_albayzin(
-    data_folder,
-    albayzin_folder,
+    cv_data_folder,
+    albayzin_data_folder,
     save_folder,
-    train_tsv_file=None,
-    dev_tsv_file=None,
-    test_tsv_file=None,
-    dev1_tsv_file=None,
-    dev2_tsv_file=None,
+    cv_train_tsv_file=None,
+    cv_dev_tsv_file=None,
+    cv_test_tsv_file=None,
+    albayzin_train_tsv_file=None,
+    albayzin_dev_tsv_file=None,
     accented_letters=False,
     language="sp",
     skip_prep=False,
@@ -86,19 +86,19 @@ def prepare_albayzin(
     if skip_prep:
         return
 
-    # If not specified point toward standard location w.r.t CommonVoice tree
+    # CommonVoice
     if train_tsv_file is None:
-        train_tsv_file = data_folder + "/train.tsv"
+        train_tsv_file = cv_data_folder + "/train.tsv"
     else:
         train_tsv_file = train_tsv_file
 
     if dev_tsv_file is None:
-        dev_tsv_file = data_folder + "/dev.tsv"
+        dev_tsv_file = cv_data_folder + "/dev.tsv"
     else:
         dev_tsv_file = dev_tsv_file
 
     if test_tsv_file is None:
-        test_tsv_file = data_folder + "/test.tsv"
+        test_tsv_file = cv_data_folder + "/test.tsv"
     else:
         test_tsv_file = test_tsv_file
 
@@ -126,56 +126,77 @@ def prepare_albayzin(
         return
     
     # Additional checks to make sure the data folder contains Common Voice
-    check_commonvoice_folders(data_folder)
+    check_commonvoice_folders(cv_data_folder)
 
     # Creating csv file for training data
-    if train_tsv_file is not None:
+    msg = "CommonVoice train split"
+    logger.info(msg)
+    cv_train_list = create_commonvoice_list(
+        cv_train_tsv_file,
+        cv_data_folder,
+        accented_letters,
+        language,
+    )
 
-        create_commonvoice_csv(
-            train_tsv_file,
-            save_csv_train,
-            data_folder,
-            accented_letters,
-            language,
-        )
+    msg = "Albayzin train split"
+    logger.info(msg)
+    albayzin_train_list = create_albayzin_list(
+        albayzin_train_tsv_file,
+        albayzin_data_folder,
+        accented_letters,
+        language
+    )
+    train_list = ["ID", "duration", "wav", "spk_id", "wrd"] + cv_train_list + albayzin_train_list
+    save_csv(save_csv_train, train_list)
 
     # Creating csv file for dev data
-    if dev_tsv_file is not None:
+    msg = "CommonVoice dev split"
+    logger.info(msg)
+    cv_dev_list = create_commonvoice_list(
+        cv_dev_tsv_file,
+        cv_data_folder,
+        accented_letters,
+        language
+    )
 
-        create_commonvoice_csv(
-            dev_tsv_file, save_csv_dev, data_folder, accented_letters, language
-        )
+    msg = "Albayzin dev split"
+    logger.info(msg)
+    albayzin_dev_list = create_albayzin_list(
+        albayzin_dev_tsv_file,
+        albayzin_data_folder,
+        accented_letters,
+        language
+    )
+    dev_list = ["ID", "duration", "wav", "spk_id", "wrd"] + cv_dev_list + albayzin_dev_list
+    save_csv(save_csv_dev, dev_list)
 
     # Creating csv file for test data
-    if test_tsv_file is not None:
+    msg = "CommonVoice test split"
+    logger.info(msg)
+    cv_test_list = create_commonvoice_list(
+        cv_test_tsv_file,
+        cv_data_folder,
+        accented_letters,
+        language,
+    )
+    test_list = ["ID", "duration", "wav", "spk_id", "wrd"] + cv_test_list
+    save_csv(save_csv_test, test_list)
 
-        create_commonvoice_csv(
-            test_tsv_file,
-            save_csv_test,
-            data_folder,
-            accented_letters,
-            language,
+
+def save_csv(csv_file, csv_lines):
+    msg = "Creating csv lists in %s ..." % (csv_file)
+    logger.info(msg)
+    with open(csv_file, mode="w", encoding="utf-8") as csv_f:
+        csv_writer = csv.writer(
+            csv_f, delimiter=",", quotechar='"', quoting=csv.QUOTE_MINIMAL
         )
 
-    # Albayzin
-    msg = "preparing Albayzin"
+        for line in csv_lines:
+            csv_writer.writerow(line)
+
+    # Final prints
+    msg = "%s successfully created!" % (csv_file)
     logger.info(msg)
-
-    train_df = pd.read_csv(save_csv_train, header=0)
-    
-    dev1_df = create_albayzin_df(dev1_tsv_file, albayzin_folder, accented_letters)
-    dev2_df = create_albayzin_df(dev2_tsv_file, albayzin_folder, accented_letters)
-
-    # filter Millennium show for validation
-    dev2_train_df = dev2_df[~dev2_df['wav'].str.contains('millennium')]
-    dev2_dev_df = dev2_df[dev2_df['wav'].str.contains('millennium')]
-    
-    train_df = pd.concat([train_df, dev1_df], ignore_index=True)
-    train_df = pd.concat([train_df, dev2_train_df], ignore_index=True)
-    dev_df = dev2_dev_df
-
-    train_df.to_csv(save_csv_train, index=None)
-    dev_df.to_csv(save_csv_dev, index=None)
 
 
 def skip(save_csv_train, save_csv_dev, save_csv_test):
@@ -204,7 +225,7 @@ def skip(save_csv_train, save_csv_dev, save_csv_test):
     return skip
 
 
-def create_albayzin_df(
+def create_albayzin_list(
     orig_tsv_file, data_folder, accented_letters=False
 ):
     # Check if the given files exists
@@ -224,7 +245,6 @@ def create_albayzin_df(
     msg = "Preparing CSV files for %s samples ..." % (str(nb_samples))
     logger.info(msg)
 
-    csv_columns = ["ID", "duration", "wav", "spk_id", "wrd"]
     csv_lines = []
 
     # Get clips path
@@ -322,20 +342,17 @@ def create_albayzin_df(
 
         progress_bar.update(1)
 
-    df = pd.DataFrame(csv_lines, columns=csv_columns)
-
     # Final prints
-    logger.info(msg)
     msg = "Number of samples: %s " % (str(len(nb_samples)))
     logger.info(msg)
     msg = "Total duration: %s Hours" % (str(round(total_duration / 3600, 2)))
     logger.info(msg)
 
-    return df
+    return csv_lines
 
 
-def create_commonvoice_csv(
-    orig_tsv_file, csv_file, data_folder, accented_letters=False, language="sp"
+def create_commonvoice_list(
+    orig_tsv_file, data_folder, accented_letters=False, language="sp"
 ):
     """
     Creates the csv file given a list of wav files.
@@ -368,11 +385,7 @@ def create_commonvoice_csv(
     msg = "Preparing CSV files for %s samples ..." % (str(nb_samples))
     logger.info(msg)
 
-    # Adding some Prints
-    msg = "Creating csv lists in %s ..." % (csv_file)
-    logger.info(msg)
-
-    csv_lines = [["ID", "duration", "wav", "spk_id", "wrd"]]
+    csv_lines = []
 
     # Start processing lines
     total_duration = 0.0
@@ -490,22 +503,13 @@ def create_commonvoice_csv(
         # Adding this line to the csv_lines list
         csv_lines.append(csv_line)
 
-    # Writing the csv lines
-    with open(csv_file, mode="w", encoding="utf-8") as csv_f:
-        csv_writer = csv.writer(
-            csv_f, delimiter=",", quotechar='"', quoting=csv.QUOTE_MINIMAL
-        )
-
-        for line in csv_lines:
-            csv_writer.writerow(line)
-
-    # Final prints
-    msg = "%s successfully created!" % (csv_file)
-    logger.info(msg)
+    # Prints
     msg = "Number of samples: %s " % (str(len(loaded_csv)))
     logger.info(msg)
     msg = "Total duration: %s Hours" % (str(round(total_duration / 3600, 2)))
     logger.info(msg)
+
+    return csv_lines
 
 
 def check_commonvoice_folders(data_folder):
