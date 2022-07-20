@@ -24,25 +24,23 @@ valid_csv: !ref <save_folder>/dev.csv
 test_csv: !ref <save_folder>/test.csv
 
 # CommonVoice
-data_folder: /disks/md1-8T/audio/cv-corpus-7.0-2021-07-21/es  # e.g, /localscratch/cv-corpus-5.1-2020-06-22/fr
-train_tsv_file: !ref <data_folder>/train.tsv  # Standard CommonVoice .tsv files
-dev_tsv_file: !ref <data_folder>/dev.tsv  # Standard CommonVoice .tsv files
-test_tsv_file: !ref <data_folder>/test.tsv  # Standard CommonVoice .tsv files
+cv_data_folder: /disks/md1-8T/audio/cv-corpus-7.0-2021-07-21/es  # e.g, /localscratch/cv-corpus-5.1-2020-06-22/fr
+cv_train_tsv_file: !ref <cv_data_folder>/train.tsv  # Standard CommonVoice .tsv files
+cv_dev_tsv_file: !ref <cv_data_folder>/dev.tsv  # Standard CommonVoice .tsv files
+cv_test_tsv_file: !ref <cv_data_folder>/test.tsv  # Standard CommonVoice .tsv files
 language: sp # use 'it' for Italian, 'rw' for Kinyarwanda, 'en' for english
 
 # Albayzin
-albayzin_folder: /disks/md1-8T/users/cx02275/speech-segmentation/data/RTVE2018DB
-train_tsv_file: !ref <albayzin_folder>/segmented/train_2nd_pass/train_aligned_filtered.tsv
-test_tsv_file: !ref <albayzin_folder>/segmented/test_2nd_pass/test_aligned_filtered.tsv
-dev1_tsv_file: !ref <albayzin_folder>/segmented/dev1_2nd_pass/dev1_aligned_filtered.tsv
-dev2_tsv_file: !ref <albayzin_folder>/segmented/dev2_2nd_pass/dev2_aligned_filtered.tsv
+albayzin_data_folder: /disks/md1-8T/users/cx02275/data/Albayzin-aligned
+albayzin_train_tsv_file: !ref <albayzin_data_folder>/tsv/sn_train.tsv
+albayzin_dev_tsv_file: !ref <albayzin_data_folder>/tsv/sn_dev.tsv
 
 # We remove utterance slonger than 10s in the train/dev/test sets as
 # longer sentences certainly correspond to "open microphones".
 avoid_if_longer_than: 10.0
 
 # Training parameters
-number_of_epochs: 160
+number_of_epochs: 10
 lr: 1.0
 lr_wav2vec: 0.00001
 ctc_weight: 0.3
