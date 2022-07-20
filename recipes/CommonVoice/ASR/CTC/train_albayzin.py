@@ -201,7 +201,7 @@ class ASR(sb.core.Brain):
             self.hparams.model.parameters()
         )
 
-        if self.checkpointer is not None:
+        if self.checkpointer is not None and not self.hparams.restart_optimizers:
             self.checkpointer.add_recoverable("modelopt", self.model_optimizer)
 
 
@@ -211,7 +211,7 @@ def dataio_prepare(hparams, tokenizer):
     It also defines the data processing pipeline through user-defined functions."""
 
     # 1. Define datasets
-    data_folder = hparams["data_folder"]
+    data_folder = hparams["cv_data_folder"]
 
     train_data = sb.dataio.dataset.DynamicItemDataset.from_csv(
         csv_path=hparams["train_csv"], replacements={"data_root": data_folder},
