@@ -87,20 +87,20 @@ def prepare_albayzin(
         return
 
     # CommonVoice
-    if train_tsv_file is None:
-        train_tsv_file = cv_data_folder + "/train.tsv"
+    if cv_train_tsv_file is None:
+        cv_train_tsv_file = cv_data_folder + "/train.tsv"
     else:
-        train_tsv_file = train_tsv_file
+        cv_train_tsv_file = cv_train_tsv_file
 
-    if dev_tsv_file is None:
-        dev_tsv_file = cv_data_folder + "/dev.tsv"
+    if cv_dev_tsv_file is None:
+        cv_dev_tsv_file = cv_data_folder + "/dev.tsv"
     else:
-        dev_tsv_file = dev_tsv_file
+        cv_dev_tsv_file = cv_dev_tsv_file
 
-    if test_tsv_file is None:
-        test_tsv_file = cv_data_folder + "/test.tsv"
+    if cv_test_tsv_file is None:
+        cv_test_tsv_file = cv_data_folder + "/test.tsv"
     else:
-        test_tsv_file = test_tsv_file
+        cv_test_tsv_file = cv_test_tsv_file
 
     # Setting the save folder
     if not os.path.exists(save_folder):
@@ -143,8 +143,7 @@ def prepare_albayzin(
     albayzin_train_list = create_albayzin_list(
         albayzin_train_tsv_file,
         albayzin_data_folder,
-        accented_letters,
-        language
+        accented_letters
     )
     train_list = ["ID", "duration", "wav", "spk_id", "wrd"] + cv_train_list + albayzin_train_list
     save_csv(save_csv_train, train_list)
@@ -164,8 +163,7 @@ def prepare_albayzin(
     albayzin_dev_list = create_albayzin_list(
         albayzin_dev_tsv_file,
         albayzin_data_folder,
-        accented_letters,
-        language
+        accented_letters
     )
     dev_list = ["ID", "duration", "wav", "spk_id", "wrd"] + cv_dev_list + albayzin_dev_list
     save_csv(save_csv_dev, dev_list)
