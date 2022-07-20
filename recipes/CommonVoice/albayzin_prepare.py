@@ -145,7 +145,7 @@ def prepare_albayzin(
         albayzin_data_folder,
         accented_letters
     )
-    train_list = ["ID", "duration", "wav", "spk_id", "wrd"] + cv_train_list + albayzin_train_list
+    train_list = [["ID", "duration", "wav", "spk_id", "wrd"]] + cv_train_list + albayzin_train_list
     save_csv(save_csv_train, train_list)
 
     # Creating csv file for dev data
@@ -165,7 +165,8 @@ def prepare_albayzin(
         albayzin_data_folder,
         accented_letters
     )
-    dev_list = ["ID", "duration", "wav", "spk_id", "wrd"] + cv_dev_list + albayzin_dev_list
+    #dev_list = [["ID", "duration", "wav", "spk_id", "wrd"]] + cv_dev_list + albayzin_dev_list
+    dev_list = [["ID", "duration", "wav", "spk_id", "wrd"]] + albayzin_dev_list
     save_csv(save_csv_dev, dev_list)
 
     # Creating csv file for test data
@@ -177,7 +178,7 @@ def prepare_albayzin(
         accented_letters,
         language,
     )
-    test_list = ["ID", "duration", "wav", "spk_id", "wrd"] + cv_test_list
+    test_list = [["ID", "duration", "wav", "spk_id", "wrd"]] + cv_test_list
     save_csv(save_csv_test, test_list)
 
 
@@ -246,8 +247,7 @@ def create_albayzin_list(
     csv_lines = []
 
     # Get clips path
-    partition_name = orig_tsv_file.split('/')[-1].split('_')[0].replace('.tsv', '')
-    clips_path = os.path.join(data_folder, 'segmented_clips', partition_name)
+    clips_path = os.path.join(data_folder, 'clips')
 
     # Start processing lines
     progress_bar = tqdm(total=len(loaded_tsv.index), desc='Albayzin')
@@ -272,7 +272,7 @@ def create_albayzin_list(
         if os.path.isfile(wav_path):
             info = torchaudio.info(wav_path)
         else:
-            msg = "\tError loading: %s" % (str(len(file_name)))
+            msg = "\tError loading: %s" % (str(file_name))
             logger.info(msg)
             continue
 
