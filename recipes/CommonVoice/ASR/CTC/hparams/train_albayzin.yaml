@@ -40,7 +40,7 @@ albayzin_dev_tsv_file: !ref <albayzin_data_folder>/tsv/sn_dev.tsv
 avoid_if_longer_than: 10.0
 
 # Training parameters
-number_of_epochs: 10
+number_of_epochs: 61 # 10 plus last exp
 lr: 1.0
 lr_wav2vec: 0.00001
 ctc_weight: 0.3
