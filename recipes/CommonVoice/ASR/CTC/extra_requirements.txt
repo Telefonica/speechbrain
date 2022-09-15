@@ -1,2 +1,2 @@
-transformers==4.13
+transformers==4.19.0
 pandas==1.4.2

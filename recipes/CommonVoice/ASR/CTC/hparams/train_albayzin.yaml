@@ -14,7 +14,7 @@ save_folder: !ref <output_folder>/save
 train_log: !ref <output_folder>/train_log.txt
 
 # URL for the biggest wav2vec2 spanish fine-tunned with CV.
-wav2vec2_ckpt: /disks/md1-8T/users/cx02275/speechbrain/recipes/CommonVoice/ASR/CTC/wav2vec2_checkpoint/from_ckpt
+wav2vec2_ckpt: /home/cx02775/speechbrain/recipes/CommonVoice/ASR/CTC/wav2vec2_checkpoint/from_ckpt
 
 # Data files
 skip_prep: False # Skip data preparation
@@ -24,23 +24,23 @@ valid_csv: !ref <save_folder>/dev.csv
 test_csv: !ref <save_folder>/test.csv
 
 # CommonVoice
-cv_data_folder: /disks/md1-8T/audio/cv-corpus-7.0-2021-07-21/es  # e.g, /localscratch/cv-corpus-5.1-2020-06-22/fr
+cv_data_folder: /home/audio/datasets/commonvoice/cv-corpus-7.0-2021-07-21/es  # e.g, /localscratch/cv-corpus-5.1-2020-06-22/fr
 cv_train_tsv_file: !ref <cv_data_folder>/train.tsv  # Standard CommonVoice .tsv files
 cv_dev_tsv_file: !ref <cv_data_folder>/dev.tsv  # Standard CommonVoice .tsv files
 cv_test_tsv_file: !ref <cv_data_folder>/test.tsv  # Standard CommonVoice .tsv files
 language: sp # use 'it' for Italian, 'rw' for Kinyarwanda, 'en' for english
 
 # Albayzin
-albayzin_data_folder: /disks/md1-8T/users/cx02275/data/Albayzin-aligned
-albayzin_train_tsv_file: !ref <albayzin_data_folder>/tsv/sn_train.tsv
-albayzin_dev_tsv_file: !ref <albayzin_data_folder>/tsv/sn_dev.tsv
+albayzin_data_folder: /home/cx02775/data/Albayzin-aligned
+albayzin_train_tsv_file: !ref <albayzin_data_folder>/tsv/rs_train.tsv
+albayzin_dev_tsv_file: !ref <albayzin_data_folder>/tsv/rs_dev.tsv
 
 # We remove utterance slonger than 10s in the train/dev/test sets as
 # longer sentences certainly correspond to "open microphones".
 avoid_if_longer_than: 10.0
 
 # Training parameters
-number_of_epochs: 61 # 10 plus last exp
+number_of_epochs: 94 # last was 101
 lr: 1.0
 lr_wav2vec: 0.00001
 ctc_weight: 0.3
